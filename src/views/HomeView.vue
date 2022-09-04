@@ -1,9 +1,23 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import UploadImage from "../components/UploadImage.vue";
+
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="main">
+    <UploadImage class="uploader"></UploadImage>
+  </div>
 </template>
+
+<style scoped>
+
+  .main{
+    height: 100vh;
+    position: relative;
+    display: grid;
+    place-items: center;;
+  }
+
+
+
+</style>
