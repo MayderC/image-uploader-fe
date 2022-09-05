@@ -1,36 +1,62 @@
 <template lang="">
-  <div class="card-contaier">
+  <div class="card-contaier"> 
     <header class="card-header">
       <h1>Upload your image</h1>
       <p>File should be Jpeg, Png..</p>
     </header>
-    <div @drop.prevent="drop" @dragenter="checkDrop"  class="card-body--drag dragzone">
-      <img src="../assets/img/image.svg" alt="img_uploader">
-      <p>Drad & drop your image here</p>
+    <div 
+      class="card-body--drag dragzone"
+      ref="dragzone"
+      @dragenter="insideDragZone = true"
+      @dragleave="removeOver" 
+      @dragover.prevent="over" 
+      @drop.prevent="drop">
+        <img src="../assets/img/image.svg" class="dragzone" alt="img_uploader" unselectable="on">
+        Drad & drop your image here
     </div>
     <footer>
       <p>Or</p>
       <div class="card-input">
+        <input id="files" @change="drop" style="visibility:hidden;" type="file">
         <label for="files" class="btn">Choose a file</label>
-        <input id="files" style="visibility:hidden;" type="file">
       </div>
     </footer>
   </div>
 </template>
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   name: "UploadImage",
-  methods: {
-    checkDrop(e){
-      e.preventDefault();
-      console.log(e)
-    },
-    drop(e){
-      e.preventDefault()
-      console.log(e)
+  data(){
+    return {
+      insideDragZone : false
     }
   },
-}
+  methods: {
+    drop(e: DragEvent ){
+      const file : FileList  = e.dataTransfer!.files
+      const dragzone : HTMLElement = this.$refs['dragzone'] as HTMLElement
+      dragzone.classList.remove('blur')
+
+      console.log(file[0].type.match(/image\/+png|jpeg/))
+
+      return e
+    },
+    over(e:Event){
+      const element = e.target as HTMLElement
+      const dragzone =  this.$refs['dragzone'] as HTMLElement
+      if(element.classList.contains('dragzone')){
+       dragzone.classList.add('blur')
+      }
+    },
+    removeOver(){
+      this.insideDragZone = false
+      const element =  this.$refs['dragzone'] as HTMLElement
+      element.classList.remove('blur')
+    }
+  },
+})
 </script>
 <style scoped>
 
@@ -49,16 +75,23 @@ export default {
     font-size: 1rem;
   }
 
+  .wrapper-drag{
+    height: 100%;
+  }
+
   .card-contaier{
     width: 402px;
     padding: 32px;
     background: #FFFFFF;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
+    user-select: none; 
   }
 
   .card-body--drag{
     position: relative;
+    text-align: center;
+    color: #a2a1a1;
     margin-top: 30px;
     background: #F6F8FB;
     height: 218px;
@@ -72,13 +105,8 @@ export default {
     max-width: 100%;
     object-fit: cover;
     margin: 36px auto;
+    pointer-events: none
 
-  }
-
-
-  .card-body--drag p {
-    text-align: center;
-    color: #a2a1a1;
   }
 
 
@@ -109,5 +137,8 @@ export default {
     white-space: nowrap;
   }
 
+  .blur{
+    background: #d2dbfcac;
+  }
 
 </style>
