@@ -39,7 +39,7 @@ export default defineComponent({
       const dragzone : HTMLElement = this.$refs['dragzone'] as HTMLElement
       dragzone.classList.remove('blur')
 
-      console.log(file[0].type.match(/image\/+png|jpeg/))
+      //file[0].type.match(/image\/+png|jpeg/))
 
       return e
     },
