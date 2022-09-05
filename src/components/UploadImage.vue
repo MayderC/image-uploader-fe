@@ -35,13 +35,15 @@ export default defineComponent({
   },
   methods: {
     drop(e: DragEvent ){
-      const file : FileList  = e.dataTransfer!.files
+      const file : File  = e.dataTransfer!.files[0]
       const dragzone : HTMLElement = this.$refs['dragzone'] as HTMLElement
       dragzone.classList.remove('blur')
+      
+      if(!file.type.match(/image\/+png|jpeg/))return
 
-      //file[0].type.match(/image\/+png|jpeg/))
-
-      return e
+      const reader = new FileReader()
+      reader.onloadend = () => console.log(reader.result);
+      reader.readAsDataURL(file);
     },
     over(e:Event){
       const element = e.target as HTMLElement
