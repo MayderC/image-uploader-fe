@@ -17,7 +17,7 @@
     <footer>
       <p>Or</p>
       <div class="card-input">
-        <input id="files" @change="drop" style="visibility:hidden;" type="file">
+        <input id="files" @change="choose" style="visibility:hidden;" type="file">
         <label for="files" class="btn">Choose a file</label>
       </div>
     </footer>
@@ -42,7 +42,26 @@ export default defineComponent({
       if(!file.type.match(/image\/+png|jpeg/))return
 
       const reader = new FileReader()
-      reader.onloadend = () => console.log(reader.result);
+      reader.onloadend = () => {
+        this.$emit('base64', reader.result)
+        this.$emit('load-img', true)
+      }
+      reader.readAsDataURL(file);
+    },
+    choose(e: Event ){
+      const file : File  = (e.target as HTMLInputElement).files![0]
+      const dragzone : HTMLElement = this.$refs['dragzone'] as HTMLElement
+      dragzone.classList.remove('blur')
+      
+      console.log(file, e)
+
+      if(!file.type.match(/image\/+png|jpeg/))return
+
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        this.$emit('base64', reader.result)
+        this.$emit('load-img', true)
+      }
       reader.readAsDataURL(file);
     },
     over(e:Event){
